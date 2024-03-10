@@ -1,3 +1,86 @@
 @{
 ViewData["Title"] = "Create a Ticket";
 }
+
+<div class="container-fluid card p-5">
+	<div class="row">
+		<div class="col-md-11">
+			<div class="fs-5 fw-bold">Create Ticket</div>
+		</div>
+		<div class="col-md-1 d-flex justify-content-end">
+			<div>
+				<button id="back-btn"
+					class="btn btn-sm  btn-primary"> <span class="material-icons">arrow_back</span></button>
+				<script>
+					$("#back-btn").click(function () {
+						window.history.back();
+					});
+				</script>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid create-task-container">
+		<form method="POST">
+			<div data-mdb-input-init
+				class="form-outline mb-4">
+				<input type="text"
+					id="Title"
+					class="form-control"
+					name="Title" />
+				<label class="form-label"
+					for="Title">Title</label>
+			</div>
+
+			<div data-mdb-input-init
+				class="form-outline mb-4">
+				<textarea class="form-control"
+					id="Description"
+					name="Description"
+					rows="4"></textarea>
+				<label class="form-label"
+					for="Description">Description</label>
+			</div>
+
+			<div data-mdb-input-init
+				class="form-outline mb-4">
+				<select class="form-select"
+					id="Status"
+					name="Status">
+					<option value="0">Open</option>
+					<option value="1">In Progress</option>
+					<option value="2">Closed</option>
+				</select>
+				<label class="form-label"
+					for="Status">Status</label>
+			</div>
+
+			<div data-mdb-input-init
+				class="form-outline mb-4">
+				<select class="form-select"
+					id="Priority"
+					name="Priority">
+					<option value="0">Low</option>
+					<option value="1">Medium</option>
+					<option value="2">High</option>
+				</select>
+				<label class="form-label"
+					for="Priority">Priority</label>
+			</div>
+
+			<div data-mdb-input-init
+				class="form-outline mb-4">
+				<input type="datetime-local"
+					id="CreatedAt"
+					class="form-control"
+					name="CreatedAt" />
+				<label class="form-label"
+					for="CreatedAt">Issue Date</label>
+			</div>
+
+			<button data-mdb-ripple-init
+				type="submit"
+				class="btn btn-primary btn-block mb-4">Submit</button>
+		</form>
+	</div>
+
+</div>

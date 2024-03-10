@@ -4,23 +4,25 @@ ViewData["Title"] = "Ticket List";
 <div class="container-fluid card p-5">
     <div class="row">
         <div class="col-md-11">
-            <div class="fs-1 fw-bold">Ticket List</div>
+            <div class="fs-5 fw-bold">Ticket List</div>
         </div>
-        <div class="col-md-1">
-            <button id="back-btn"
-                class="btn btn-sm btn-primary w-100"><i class="fas fa-angle-left"></i> Back</button>
-            <script>
-                $("#back-btn").click(function () {
-                    window.history.back();
-                });
-            </script>
+        <div class="col-md-1 d-flex justify-content-end">
+            <div>
+                <button id="back-btn"
+                    class="btn btn-sm  btn-primary"> <span class="material-icons">arrow_back</span></button>
+                <script>
+                    $("#back-btn").click(function () {
+                        window.history.back();
+                    });
+                </script>
+            </div>
         </div>
     </div>
     <div class="container-fluid">
         <a asp-area=""
             asp-controller="Ticket"
             asp-action="Create"
-            class="my-3 btn btn-sm btn-outline-primary"><i class="fas fa-plus"></i>Create New
+            class="my-3 btn btn-sm btn-outline-primary">Create New
             Task</a>
         <div class="ticketlist-container mt-2"
             style="overflow-x: auto; max-height: 500px;">
@@ -38,9 +40,9 @@ ViewData["Title"] = "Ticket List";
                     @if (ViewBag.Tickets.Count == 0)
                     {
                     <tr>
-                        <td colspan="2"
+                        <td colspan="5"
                             class="text-center">
-                            <i class="fas fa-exclamation-triangle fs-1 text-danger"></i>
+                            <span class="material-icons display-3 text-danger">warning</span>
                             <p class="text-danger fs-4">No tickets found</p>
                         </td>
                     </tr>

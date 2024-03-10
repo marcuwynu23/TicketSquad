@@ -6,6 +6,9 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - TicketSquad</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
     <link rel="stylesheet"
         href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet"
@@ -48,19 +51,31 @@
                             <a class="nav-link fw-bold"
                                 asp-area=""
                                 asp-controller="Ticket"
-                                asp-action="Index">Ticket List</a>
+                                asp-action="Index">
+                                <div>
+                                    <span class="material-icons">
+                                        confirmation_number
+                                    </span>
+                                    <span class="align-top">Ticket List</span>
+                                </div>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link fw-bold"
                                 asp-area=""
                                 asp-controller="Account"
-                                asp-action="Index">Account</a>
+                                asp-action="Index">
+                                <span class="material-icons me-1">person</span>
+                                <span class="align-top">Account</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link fw-bold"
                                 asp-area=""
                                 asp-controller="About"
-                                asp-action="Index">About</a>
+                                asp-action="Index">
+                                <span class="material-icons me-1">info</span>
+                                <span class="align-top">About</span>
+                            </a>
                         </li>
                     </ul>
                 </div>

@@ -1,3 +1,69 @@
 @{
 ViewData["Title"] = "View Ticket";
 }
+
+<div class="container-fluid card p-5">
+	<div class="row">
+		<div class="col-md-11">
+			<div class="fs-5 fw-bold">Show Ticket Details</div>
+		</div>
+		<div class="col-md-1 d-flex justify-content-end">
+			<div>
+				<button id="back-btn"
+					class="btn btn-sm  btn-primary"> <span class="material-icons">arrow_back</span></button>
+				<script>
+					$("#back-btn").click(function () {
+						window.history.back();
+					});
+				</script>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid show-task-container">
+		<form>
+			<div class="form-group mb-4">
+				<label for="Title">Title</label>
+				<input type="text"
+					id="Title"
+					class="form-control"
+					value="@ViewBag.Ticket.Title"
+					readonly />
+			</div>
+
+			<div class="form-group mb-4">
+				<label for="Description">Description</label>
+				<textarea class="form-control"
+					id="Description"
+					readonly>@ViewBag.Ticket.Description</textarea>
+			</div>
+
+			<div class="form-group mb-4">
+				<label for="Status">Status</label>
+				<input type="text"
+					id="Status"
+					class="form-control"
+					value="@ViewBag.Ticket.Status"
+					readonly />
+			</div>
+
+			<div class="form-group mb-4">
+				<label for="Priority">Priority</label>
+				<input type="text"
+					id="Priority"
+					class="form-control"
+					value="@ViewBag.Ticket.Priority"
+					readonly />
+			</div>
+
+			<div class="form-group mb-4">
+				<label for="CreatedAt">Created At</label>
+				<input type="text"
+					id="CreatedAt"
+					class="form-control"
+					value="@ViewBag.Ticket.CreatedAt"
+					readonly />
+			</div>
+		</form>
+	</div>
+
+</div>

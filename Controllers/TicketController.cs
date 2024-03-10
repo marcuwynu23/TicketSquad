@@ -25,6 +25,8 @@ public class TicketController : Controller
 
     public IActionResult Show(int Id)
     {
+        var Ticket = _context.Tickets.Find(Id);
+        ViewBag.Ticket = Ticket;
         return View();
     }
 
@@ -35,12 +37,17 @@ public class TicketController : Controller
 
     public IActionResult Edit(int Id)
     {
+        var Ticket = _context.Tickets.Find(Id);
+        ViewBag.Ticket = Ticket;
         return View();
     }
 
     [HttpGet]
     public IActionResult Delete(int Id)
     {
+        var Ticket = _context.Tickets.Find(Id);
+        _context.Tickets.Remove(Ticket);
+        _context.SaveChanges();
         return RedirectToAction("Index", "Ticket");
     }
 }
