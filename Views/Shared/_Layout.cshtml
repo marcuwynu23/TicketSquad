@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TicketSquad</title>
+    <link rel="stylesheet"
+        href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+        href="~/lib/md5/css/mdb.min.css" />
+    <link rel="stylesheet"
+        href="~/css/site.css"
+        asp-append-version="true" />
+    <link rel="stylesheet"
+        href="~/TicketSquad.styles.css"
+        asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold"
+                    asp-area=""
+                    asp-controller="Ticket"
+                    asp-action="Index">
+                    <img src="https://clipartcraft.com/images/ticket-clipart-clear-background-1.png"
+                        alt="Task Manager Icon"
+                        width="30"
+                        height="30"
+                        class="d-inline-block align-top me-2">
+                    TicketSquad</a>
+                <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold"
+                                asp-area=""
+                                asp-controller="Ticket"
+                                asp-action="Index">Ticket List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold"
+                                asp-area=""
+                                asp-controller="Account"
+                                asp-action="Index">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold"
+                                asp-area=""
+                                asp-controller="About"
+                                asp-action="Index">About</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid p-3">
+        <main role="main"
+            class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="card footer text-muted rounded-0">
+        <div class="container text-center">
+            &copy; 2024 - TicketSquad
+        </div>
+    </footer>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/md5/js/mdb.umd.min.js"></script>
+    <script src="~/lib/md5/js/mdb.es.min.js"></script>
+    <script src="~/js/site.js"
+        asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

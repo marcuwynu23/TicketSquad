@@ -1,0 +1,10 @@
+*.exe
+*.pdb
+*.dll
+*.cache
+*.log
+.nuget
+.env
+/bin/
+/obj/
+/packages/

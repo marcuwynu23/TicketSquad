@@ -1,0 +1,114 @@
+﻿@{
+ViewData["Title"] = "Ticket List";
+}
+<div class="container-fluid card p-5">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="fs-1 fw-bold">Ticket List</div>
+        </div>
+        <div class="col-md-1">
+            <button id="back-btn"
+                class="btn btn-sm btn-primary w-100"><i class="fas fa-angle-left"></i> Back</button>
+            <script>
+                $("#back-btn").click(function () {
+                    window.history.back();
+                });
+            </script>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <a asp-area=""
+            asp-controller="Ticket"
+            asp-action="Create"
+            class="my-3 btn btn-sm btn-outline-primary"><i class="fas fa-plus"></i>Create New
+            Task</a>
+        <div class="ticketlist-container mt-2"
+            style="overflow-x: auto; max-height: 500px;">
+            <table class="table  table-fixed">
+                <thead>
+                    <tr>
+                        <th class="fs-5 fw-bold">Issue Date</th>
+                        <th class="fs-5 fw-bold">Status</th>
+                        <th class="fs-5 fw-bold">Priority</th>
+                        <th class="fs-5 fw-bold">Title</th>
+                        <th class="fs-5 text-end fw-bold w-25">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider table-divider-color">
+                    @if (ViewBag.Tickets.Count == 0)
+                    {
+                    <tr>
+                        <td colspan="2"
+                            class="text-center">
+                            <i class="fas fa-exclamation-triangle fs-1 text-danger"></i>
+                            <p class="text-danger fs-4">No tickets found</p>
+                        </td>
+                    </tr>
+                    }
+                    else
+                    {
+                    <!-- list from ViewBag.Tickets-->
+                    @foreach (var ticket in ViewBag.Tickets)
+                    {
+                    <tr>
+                        <td>
+                            <p class="fw-light">
+                                @ticket.CreatedAt
+                            </p>
+                        </td>
+                        <td>
+                            @if(ticket.Status == TicketStatus.Open){
+                            <p class="fw-bold text-primary">@ticket.Status</p>
+                            }else if(ticket.Status == TicketStatus.InProgress){
+                            <p class="fw-bold text-warning">@ticket.Status</p>
+                            }else{
+                            <p class="fw-bold text-secondary">@ticket.Status</p>
+                            }
+                        </td>
+                        <td>
+                            @if(ticket.Priority == TicketPriority.Low){
+                            <p class="fw-bold text-primary">@ticket.Priority</p>
+                            }else if(ticket.Priority == TicketPriority.Medium){
+                            <p class="fw-bold text-warning">@ticket.Priority</p>
+                            }else{
+                            <p class="fw-bold text-danger">@ticket.Priority</p>
+                            }
+
+                        </td>
+                        <td>
+                            <p class="fw-light">
+                                @ticket.Title
+                            </p>
+                        </td>
+
+                        <td class="text-end">
+                            <a asp-area=""
+                                asp-controller="Ticket"
+                                asp-action="Show"
+                                asp-route-id="@ticket.Id"
+                                class="btn btn-sm btn-primary text-capitalize">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            <a asp-area=""
+                                asp-controller="Ticket"
+                                asp-action="Edit"
+                                asp-route-id="@ticket.Id"
+                                class="btn btn-sm btn-warning text-capitalize">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                            <a asp-area=""
+                                asp-controller="Ticket"
+                                asp-action="Delete"
+                                asp-route-id="@ticket.Id"
+                                class="btn btn-sm btn-danger text-capitalize">
+                                <i class="fas fa-trash-alt me-1"></i>Delete
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
