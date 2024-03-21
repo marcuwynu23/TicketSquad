@@ -35,11 +35,57 @@ public class TicketController : Controller
         return View();
     }
 
+    [HttpPost]
+    public IActionResult Create(Ticket ticket)
+    {
+        if (DateTime.TryParse(ticket.CreatedAt.ToString(), out DateTime clientDateTime))
+        {
+            // Convert the client's local datetime to UTC format if it's not already in UTC
+            if (clientDateTime.Kind != DateTimeKind.Utc)
+            {
+                clientDateTime = clientDateTime.ToUniversalTime();
+            }
+            // Assign the UTC datetime to the CreateAt property of the ticket
+
+            if (int.TryParse(HttpContext.Session.GetString("UserId"), out int UserId))
+            {
+                ticket.CreatedAt = clientDateTime;
+                ticket.UserId = UserId;
+                // Add the ticket to the context
+                _context.Tickets.Add(ticket);
+                _context.SaveChanges();
+            }
+            try
+            {
+                // Save changes to the database
+                // Redirect to the index action of the Ticket controller
+                return RedirectToAction("Index", "Ticket");
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately
+                return BadRequest("An error occurred while saving the ticket: " + ex.Message);
+            }
+        }
+        else
+        {
+            // Handle invalid datetime format from the client
+            return BadRequest("Invalid datetime format");
+        }
+    }
+
     public IActionResult Edit(int Id)
     {
-        var Ticket = _context.Tickets.Find(Id);
-        ViewBag.Ticket = Ticket;
-        return View();
+        try
+        {
+            var Ticket = _context.Tickets.Find(Id);
+            ViewBag.Ticket = Ticket;
+            return View();
+        }
+        catch (System.Exception)
+        {
+            return RedirectToAction("Index", "Ticket");
+        }
     }
 
     [HttpGet]

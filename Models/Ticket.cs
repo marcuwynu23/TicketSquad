@@ -15,7 +15,7 @@ public enum TicketPriority
     Medium,
     High
 }
-
+    
 public class Ticket
 {
     public int Id { get; set; }

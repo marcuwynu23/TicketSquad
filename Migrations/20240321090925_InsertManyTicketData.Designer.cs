@@ -12,7 +12,7 @@ using TicketSquad.Database;
 namespace TicketSquad.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240310061245_InsertManyTicketData")]
+    [Migration("20240321090925_InsertManyTicketData")]
     partial class InsertManyTicketData
     {
         /// <inheritdoc />

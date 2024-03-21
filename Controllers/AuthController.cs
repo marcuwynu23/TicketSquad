@@ -46,8 +46,10 @@ public class AuthController : Controller
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity)
             );
+
             // set the user model in session convert to json
             HttpContext.Session.SetString("Auth", JsonSerializer.Serialize(auth));
+            HttpContext.Session.SetString("UserId", user.Id.ToString());
 
             return RedirectToAction("Index", "Ticket");
         }
@@ -55,7 +57,6 @@ public class AuthController : Controller
         {
             return RedirectToAction("Login", "Auth");
         }
-        // return Json(auth);
     }
 
     [HttpGet]
