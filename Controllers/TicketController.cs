@@ -1,99 +1,182 @@
 using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketSquad.Database;
 using TicketSquad.Models;
 
-namespace TicketSquad.Controllers;
-
-[Authorize]
-public class TicketController : Controller
+namespace TicketSquad.Controllers
 {
-    private readonly AppDBContext _context;
-
-    public TicketController(AppDBContext context)
+    [Authorize]
+    public class TicketController : Controller
     {
-        _context = context;
-    }
+        private readonly AppDBContext _context;
 
-    public IActionResult Index()
-    {
-        var tickets = _context.Tickets.OrderBy(t => t.CreatedAt).ToList();
-        ViewBag.Tickets = tickets;
-        return View();
-    }
-
-    public IActionResult Show(int Id)
-    {
-        var Ticket = _context.Tickets.Find(Id);
-        ViewBag.Ticket = Ticket;
-        return View();
-    }
-
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult Create(Ticket ticket)
-    {
-        if (DateTime.TryParse(ticket.CreatedAt.ToString(), out DateTime clientDateTime))
+        public TicketController(AppDBContext context)
         {
-            // Convert the client's local datetime to UTC format if it's not already in UTC
-            if (clientDateTime.Kind != DateTimeKind.Utc)
-            {
-                clientDateTime = clientDateTime.ToUniversalTime();
-            }
-            // Assign the UTC datetime to the CreateAt property of the ticket
+            _context = context;
+        }
 
-            if (int.TryParse(HttpContext.Session.GetString("UserId"), out int UserId))
+        public IActionResult Index()
+        {
+            List<Ticket> tickets;
+
+            // Move session logic here where HttpContext is fully available
+            var auth = JsonSerializer.Deserialize<Auth>(HttpContext.Session.GetString("Auth"));
+            var role = HttpContext.Session.GetString("Role");
+            var userIdString = HttpContext.Session.GetString("UserId");
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == auth.Email && u.Role == auth.Role);
+            if (user == null)
             {
-                ticket.CreatedAt = clientDateTime;
-                ticket.UserId = UserId;
-                // Add the ticket to the context
-                _context.Tickets.Add(ticket);
-                _context.SaveChanges();
+                // If user is not found, redirect to home or handle appropriately
+                return RedirectToAction("Index", "Home");
             }
+
+            if (role == "Admin")
+            {
+                // Admin sees all tickets
+                tickets = _context.Tickets.OrderBy(t => t.CreatedAt)
+                                    .Select(t => new Ticket
+                                    {
+                                        Id = t.Id,
+                                        Title = t.Title,
+                                        CreatedAt = t.CreatedAt,
+                                        Status = t.Status,
+                                        Priority = t.Priority,
+                                        UserId = t.UserId,
+                                        User = t.User // Assuming you have a User navigation property in the Ticket model
+                                    }).ToList();
+
+                // ViewBag.AccountName = user.LastName;
+            }
+            else if (role == "User" && int.TryParse(userIdString, out int userId))
+            {
+                // Users only see their own tickets
+                tickets = _context.Tickets.Where(t => t.UserId == userId).OrderBy(t => t.CreatedAt).ToList();
+            }
+            else
+            {
+                // If the role is not admin or user, return an empty list or handle as needed
+                tickets = new List<Ticket>();
+            }
+
+            ViewBag.Tickets = tickets;
+            ViewBag.Role = role;
+
+            return View();
+        }
+
+        public IActionResult Show(int Id)
+        {
+            var ticket = _context.Tickets.Find(Id);
+            ViewBag.Ticket = ticket;
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Ticket ticket)
+        {
+            if (DateTime.TryParse(ticket.CreatedAt.ToString(), out DateTime clientDateTime))
+            {
+                if (clientDateTime.Kind != DateTimeKind.Utc)
+                {
+                    clientDateTime = clientDateTime.ToUniversalTime();
+                }
+
+                if (int.TryParse(HttpContext.Session.GetString("UserId"), out int userId))
+                {
+                    ticket.CreatedAt = clientDateTime;
+                    ticket.UserId = userId;
+
+                    _context.Tickets.Add(ticket);
+                    _context.SaveChanges();
+
+                    try
+                    {
+                        return RedirectToAction("Index", "Ticket");
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest("An error occurred while saving the ticket: " + ex.Message);
+                    }
+                }
+            }
+            return BadRequest("Invalid datetime format");
+        }
+
+        public IActionResult Edit(int Id)
+        {
             try
             {
-                // Save changes to the database
-                // Redirect to the index action of the Ticket controller
+                var role = HttpContext.Session.GetString("Role");
+                var ticket = _context.Tickets.Find(Id);
+                if (role == "Admin")
+                {
+                    ViewBag.UserId = ticket.UserId;
+                }
+                else if (role == "User")
+                {
+                    ViewBag.UserId = HttpContext.Session.GetString("UserId");
+                }
+
+                ViewBag.Ticket = ticket;
+                return View();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Ticket");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Ticket ticket)
+        {
+            try
+            {
+                if (!DateTime.TryParse(ticket.CreatedAt.ToString(), out DateTime clientDateTime))
+                {
+                    return BadRequest("Invalid datetime format.");
+                }
+
+                if (clientDateTime.Kind != DateTimeKind.Utc)
+                {
+                    clientDateTime = clientDateTime.ToUniversalTime();
+                }
+
+                ticket.CreatedAt = clientDateTime;
+
+                if (!_context.Users.Any(u => u.Id == ticket.UserId))
+                {
+                    return BadRequest("Invalid UserId.");
+                }
+
+                _context.Tickets.Update(ticket);
+                _context.SaveChanges();
+
                 return RedirectToAction("Index", "Ticket");
             }
             catch (Exception ex)
             {
-                // Handle the exception appropriately
-                return BadRequest("An error occurred while saving the ticket: " + ex.Message);
+                return StatusCode(500, "An error occurred while saving the ticket: " + ex.Message);
             }
         }
-        else
-        {
-            // Handle invalid datetime format from the client
-            return BadRequest("Invalid datetime format");
-        }
-    }
 
-    public IActionResult Edit(int Id)
-    {
-        try
+        [HttpGet]
+        public IActionResult Delete(int Id)
         {
-            var Ticket = _context.Tickets.Find(Id);
-            ViewBag.Ticket = Ticket;
-            return View();
-        }
-        catch (System.Exception)
-        {
+            var ticket = _context.Tickets.Find(Id);
+            if (ticket != null)
+            {
+                _context.Tickets.Remove(ticket);
+                _context.SaveChanges();
+            }
             return RedirectToAction("Index", "Ticket");
         }
-    }
-
-    [HttpGet]
-    public IActionResult Delete(int Id)
-    {
-        var Ticket = _context.Tickets.Find(Id);
-        _context.Tickets.Remove(Ticket);
-        _context.SaveChanges();
-        return RedirectToAction("Index", "Ticket");
     }
 }

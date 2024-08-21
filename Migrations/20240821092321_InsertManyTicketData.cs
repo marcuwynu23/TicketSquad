@@ -68,7 +68,7 @@ namespace TicketSquad.Migrations
                         (int)priority,
                         createdAt,
                         updatedAt,
-                        1 // Fixed user ID to 1
+                        2 // Fixed user ID to 1
                     }
                 );
             }

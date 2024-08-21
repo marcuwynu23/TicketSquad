@@ -46,10 +46,12 @@ public class AuthController : Controller
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity)
             );
+            Console.WriteLine("User Role: " + user.Role);
 
             // set the user model in session convert to json
             HttpContext.Session.SetString("Auth", JsonSerializer.Serialize(auth));
             HttpContext.Session.SetString("UserId", user.Id.ToString());
+            HttpContext.Session.SetString("Role", user.Role.ToString());
 
             return RedirectToAction("Index", "Ticket");
         }

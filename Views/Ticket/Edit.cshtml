@@ -1,5 +1,5 @@
 @{
-ViewData["Title"] = "Edit Ticket";
+	ViewData["Title"] = "Edit Ticket";
 }
 <div class="container-fluid card p-5">
 	<div class="row">
@@ -8,8 +8,8 @@ ViewData["Title"] = "Edit Ticket";
 		</div>
 		<div class="col-md-1 d-flex justify-content-end">
 			<div>
-				<button id="back-btn"
-					class="btn btn-sm  btn-primary"> <span class="material-icons">arrow_back</span></button>
+				<button id="back-btn" class="btn btn-sm  btn-primary"> <span
+						class="material-icons">arrow_back</span></button>
 				<script>
 					$("#back-btn").click(function () {
 						window.history.back();
@@ -20,28 +20,21 @@ ViewData["Title"] = "Edit Ticket";
 	</div>
 	<div class="container-fluid update-task-container">
 		<form method="POST">
+			<input type="text" id="Title" class="form-control" name="UserId" value="@ViewBag.UserId" />
 			<div class="form-group mb-4">
 				<label for="Title">Title</label>
-				<input type="text"
-					id="Title"
-					class="form-control"
-					name="Title"
-					value="@ViewBag.Ticket.Title" />
+				<input type="text" id="Title" class="form-control" name="Title" value="@ViewBag.Ticket.Title" />
 			</div>
 
 			<div class="form-group mb-4">
 				<label for="Description">Description</label>
-				<textarea class="form-control"
-					id="Description"
+				<textarea class="form-control" id="Description"
 					name="Description">@ViewBag.Ticket.Description</textarea>
 			</div>
 
 			<div class="form-group mb-4">
 				<label for="Status">Status</label>
-				<select id="Status"
-					class="form-select"
-					name="Status"
-					value="@ViewBag.Ticket.Status">
+				<select id="Status" class="form-select" name="Status" value="@ViewBag.Ticket.Status">
 					<option value="@TicketStatus.Open">Open</option>
 					<option value="@TicketStatus.InProgress">In Progress</option>
 					<option value="@TicketStatus.Closed">Closed</option>
@@ -50,9 +43,7 @@ ViewData["Title"] = "Edit Ticket";
 
 			<div class="form-group mb-4">
 				<label for="Priority">Priority</label>
-				<select id="Priority"
-					class="form-select"
-					name="Priority">
+				<select id="Priority" class="form-select" name="Priority">
 					<option value="@TicketPriority.Low">Low</option>
 					<option value="@TicketPriority.Medium">Medium</option>
 					<option value="@TicketPriority.High">High</option>
@@ -61,17 +52,12 @@ ViewData["Title"] = "Edit Ticket";
 
 			<div class="form-group mb-4">
 				<label for="CreatedAt">Created At</label>
-				<input type="text"
-					id="CreatedAt"
-					class="form-control"
-					name="CreatedAt"
+				<input type="text" id="CreatedAt" class="form-control" name="CreatedAt"
 					value="@ViewBag.Ticket.CreatedAt" />
 			</div>
 
-			<button type="submit"
-				class="btn btn-primary">Update</button>
-			<a href="#"
-				class="btn btn-secondary">Cancel</a>
+			<button type="submit" class="btn btn-primary">Update</button>
+			<a href="#" class="btn btn-secondary">Cancel</a>
 		</form>
 	</div>
 </div>

@@ -12,8 +12,8 @@ using TicketSquad.Database;
 namespace TicketSquad.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240321090925_InsertManyTicketData")]
-    partial class InsertManyTicketData
+    [Migration("20240821084547_InsertUserData")]
+    partial class InsertUserData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
