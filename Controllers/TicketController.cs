@@ -20,6 +20,10 @@ namespace TicketSquad.Controllers
         public IActionResult Index()
         {
             List<Ticket> tickets;
+            if (HttpContext.Session.GetString("Auth") == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
 
             // Move session logic here where HttpContext is fully available
             var auth = JsonSerializer.Deserialize<Auth>(HttpContext.Session.GetString("Auth"));
@@ -80,7 +84,7 @@ namespace TicketSquad.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Ticket ticket)
+        public IActionResult Create(Ticket ticket, IFormFile Screenshot)
         {
             if (DateTime.TryParse(ticket.CreatedAt.ToString(), out DateTime clientDateTime))
             {
@@ -93,6 +97,41 @@ namespace TicketSquad.Controllers
                 {
                     ticket.CreatedAt = clientDateTime;
                     ticket.UserId = userId;
+
+                    // Handle file upload
+                    if (Screenshot != null && Screenshot.Length > 0)
+                    {
+                        try
+                        {
+                            // Define the path where the file should be saved
+                            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/screenshots");
+
+                            // Ensure the directory exists
+                            if (!Directory.Exists(uploadsFolder))
+                            {
+                                Directory.CreateDirectory(uploadsFolder);
+                            }
+
+                            // Create a unique filename
+                            var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(Screenshot.FileName);
+
+                            // Combine the directory and file name
+                            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                            // Save the file to the specified path
+                            using (var fileStream = new FileStream(filePath, FileMode.Create))
+                            {
+                                Screenshot.CopyTo(fileStream);
+                            }
+
+                            // Store the file path in the database (assuming your Ticket model has a ScreenshotPath property)
+                            ticket.ScreenshotPath = "/uploads/screenshots/" + uniqueFileName;
+                        }
+                        catch (Exception ex)
+                        {
+                            return BadRequest("An error occurred while uploading the screenshot: " + ex.Message);
+                        }
+                    }
 
                     _context.Tickets.Add(ticket);
                     _context.SaveChanges();
@@ -109,6 +148,7 @@ namespace TicketSquad.Controllers
             }
             return BadRequest("Invalid datetime format");
         }
+
 
         public IActionResult Edit(int Id)
         {
@@ -135,39 +175,64 @@ namespace TicketSquad.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Ticket ticket)
+        public IActionResult Edit(Ticket ticket, IFormFile Screenshot, bool KeepScreenshot)
         {
-            try
+            if (DateTime.TryParse(ticket.CreatedAt.ToString(), out DateTime clientDateTime))
             {
-                if (!DateTime.TryParse(ticket.CreatedAt.ToString(), out DateTime clientDateTime))
-                {
-                    return BadRequest("Invalid datetime format.");
-                }
-
                 if (clientDateTime.Kind != DateTimeKind.Utc)
                 {
                     clientDateTime = clientDateTime.ToUniversalTime();
                 }
 
-                ticket.CreatedAt = clientDateTime;
-
-                if (!_context.Users.Any(u => u.Id == ticket.UserId))
+                if (int.TryParse(HttpContext.Session.GetString("UserId"), out int userId))
                 {
-                    return BadRequest("Invalid UserId.");
+                    ticket.CreatedAt = clientDateTime;
+                    ticket.UserId = userId;
+
+                    if (!KeepScreenshot && Screenshot != null && Screenshot.Length > 0)
+                    {
+                        // Define the path where the file should be saved
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/screenshots");
+
+                        // Ensure the directory exists
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+
+                        // Create a unique filename
+                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(Screenshot.FileName);
+
+                        // Combine the directory and file name
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        // Save the file to the specified path
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            Screenshot.CopyTo(fileStream);
+                        }
+
+                        // Store the file path in the database
+                        ticket.ScreenshotPath = "/uploads/screenshots/" + uniqueFileName;
+                    }
+                    else if (KeepScreenshot)
+                    {
+                        // Preserve the existing ScreenshotPath
+                        ticket.ScreenshotPath = _context.Tickets
+                            .Where(t => t.Id == ticket.Id)
+                            .Select(t => t.ScreenshotPath)
+                            .FirstOrDefault();
+                    }
+
+                    _context.Tickets.Update(ticket);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Index", "Ticket");
                 }
-
-                _context.Tickets.Update(ticket);
-                _context.SaveChanges();
-
-                return RedirectToAction("Index", "Ticket");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while saving the ticket: " + ex.Message);
-            }
+            return BadRequest("Invalid datetime format");
         }
 
-        [HttpGet]
         public IActionResult Delete(int Id)
         {
             var ticket = _context.Tickets.Find(Id);

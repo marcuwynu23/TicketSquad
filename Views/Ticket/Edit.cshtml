@@ -8,8 +8,9 @@
 		</div>
 		<div class="col-md-1 d-flex justify-content-end">
 			<div>
-				<button id="back-btn" class="btn btn-sm  btn-primary"> <span
-						class="material-icons">arrow_back</span></button>
+				<button id="back-btn" class="btn btn-sm shadow-none btn-primary">
+					<span class="material-icons">arrow_back</span>
+				</button>
 				<script>
 					$("#back-btn").click(function () {
 						window.history.back();
@@ -19,8 +20,8 @@
 		</div>
 	</div>
 	<div class="container-fluid update-task-container">
-		<form method="POST">
-			<input type="text" id="Title" class="form-control" name="UserId" value="@ViewBag.UserId" />
+		<form method="POST" enctype="multipart/form-data">
+			<input hidden type="text" id="UserId" class="form-control" name="UserId" value="@ViewBag.UserId" />
 			<div class="form-group mb-4">
 				<label for="Title">Title</label>
 				<input type="text" id="Title" class="form-control" name="Title" value="@ViewBag.Ticket.Title" />
@@ -34,7 +35,7 @@
 
 			<div class="form-group mb-4">
 				<label for="Status">Status</label>
-				<select id="Status" class="form-select" name="Status" value="@ViewBag.Ticket.Status">
+				<select id="Status" class="form-select" name="Status">
 					<option value="@TicketStatus.Open">Open</option>
 					<option value="@TicketStatus.InProgress">In Progress</option>
 					<option value="@TicketStatus.Closed">Closed</option>
@@ -56,8 +57,31 @@
 					value="@ViewBag.Ticket.CreatedAt" />
 			</div>
 
-			<button type="submit" class="btn btn-primary">Update</button>
-			<a href="#" class="btn btn-secondary">Cancel</a>
+			<div class="form-group mb-4">
+				<label for="Screenshot">Screenshot</label>
+				@if (!string.IsNullOrEmpty(ViewBag.Ticket.ScreenshotPath))
+				{
+					<div class="mb-2">
+						<img src="@ViewBag.Ticket.ScreenshotPath" alt="Screenshot" style="max-width: 200px;" />
+					</div>
+					<div class="form-check">
+						<input type="checkbox" class="form-check-input" id="KeepScreenshot" name="KeepScreenshot" checked />
+						<label class="form-check-label" for="KeepScreenshot">Keep existing screenshot</label>
+					</div>
+				}
+				<input type="file" id="Screenshot" class="form-control mt-2" name="Screenshot" accept="image/*" />
+			</div>
+
+			<button type="submit" class="btn shadow-none btn-primary">Update</button>
+			<a href="/ticket" class="btn shadow-none btn-secondary">Cancel</a>
 		</form>
 	</div>
 </div>
+
+<script>
+	// JavaScript to set the selected value for Status
+	document.getElementById("Status").value = "@ViewBag.Ticket.Status";
+
+	// JavaScript to set the selected value for Priority
+	document.getElementById("Priority").value = "@ViewBag.Ticket.Priority";
+</script>

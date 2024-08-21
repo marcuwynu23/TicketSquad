@@ -15,7 +15,7 @@ public enum TicketPriority
     Medium,
     High
 }
-    
+
 public class Ticket
 {
     public int Id { get; set; }
@@ -23,6 +23,8 @@ public class Ticket
     public string Description { get; set; }
     public TicketStatus Status { get; set; }
     public TicketPriority Priority { get; set; }
+
+    public string ScreenshotPath { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 

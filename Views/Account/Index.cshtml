@@ -1,5 +1,5 @@
 @{
-ViewData["Title"] = "Account";
+	ViewData["Title"] = "Account";
 }
 
 <div class="container-fluid card p-5">
@@ -9,8 +9,8 @@ ViewData["Title"] = "Account";
 		</div>
 		<div class="col-md-1 d-flex justify-content-end">
 			<div>
-				<button id="back-btn"
-					class="btn btn-sm  btn-primary"> <span class="material-icons">arrow_back</span></button>
+				<button id="back-btn" class="btn btn-sm shadow-none btn-primary"> <span
+						class="material-icons">arrow_back</span></button>
 				<script>
 					$("#back-btn").click(function () {
 						window.history.back();
@@ -24,52 +24,27 @@ ViewData["Title"] = "Account";
 	<div class="row mt-3">
 		<div class="col-md-6">
 			<div class="mb-3">
-				<label for="firstName"
-					class="form-label">First Name</label>
-				<input type="text"
-					class="form-control"
-					id="firstName"
-					value="@ViewBag.User.FirstName"
-					disabled>
+				<label for="firstName" class="form-label">First Name</label>
+				<input type="text" class="form-control" id="firstName" value="@ViewBag.User.FirstName" disabled>
 			</div>
 			<div class="mb-3">
-				<label for="middleName"
-					class="form-label">Middle Name</label>
-				<input type="text"
-					class="form-control"
-					id="middleName"
-					value="@ViewBag.User.MiddleName"
-					disabled>
+				<label for="middleName" class="form-label">Middle Name</label>
+				<input type="text" class="form-control" id="middleName" value="@ViewBag.User.MiddleName" disabled>
 			</div>
 			<div class="mb-3">
-				<label for="lastName"
-					class="form-label">Last Name</label>
-				<input type="text"
-					class="form-control"
-					id="lastName"
-					value="@ViewBag.User.LastName"
-					disabled>
+				<label for="lastName" class="form-label">Last Name</label>
+				<input type="text" class="form-control" id="lastName" value="@ViewBag.User.LastName" disabled>
 			</div>
 
 		</div>
 		<div class="col-md-6">
 			<div class="mb-3">
-				<label for="email"
-					class="form-label">Email</label>
-				<input type="email"
-					class="form-control"
-					id="email"
-					value="@ViewBag.User.Email"
-					disabled>
+				<label for="email" class="form-label">Email</label>
+				<input type="email" class="form-control" id="email" value="@ViewBag.User.Email" disabled>
 			</div>
 			<div class="mb-3">
-				<label for="role"
-					class="form-label">Role</label>
-				<input type="text"
-					class="form-control"
-					id="role"
-					value="@ViewBag.User.Role"
-					disabled>
+				<label for="role" class="form-label">Role</label>
+				<input type="text" class="form-control" id="role" value="@ViewBag.User.Role" disabled>
 			</div>
 		</div>
 	</div>
@@ -80,9 +55,7 @@ ViewData["Title"] = "Account";
 		<div class="col-md-12">
 			<p class="fs-5 fw-bold">Logout Account</p>
 			<p class="text-danger">Note: Once Logout Session </p>
-			<a asp-controller="Auth"
-				asp-action="Logout"
-				class="btn btn-danger">Logout</a>
+			<a asp-controller="Auth" asp-action="Logout" class="btn shadow-none btn-danger">Logout</a>
 		</div>
 	</div>
 </div>

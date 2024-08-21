@@ -12,8 +12,8 @@ using TicketSquad.Database;
 namespace TicketSquad.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240821092321_InsertManyTicketData")]
-    partial class InsertManyTicketData
+    [Migration("20240821095612_AddScreenshotPathToTicket")]
+    partial class AddScreenshotPathToTicket
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,10 @@ namespace TicketSquad.Migrations
 
                     b.Property<int>("Priority")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ScreenshotPath")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
